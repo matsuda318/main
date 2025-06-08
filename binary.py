@@ -123,7 +123,7 @@ class binary_regression:
         z = self._get_z_y(x)
         z = z @ self.coef
         func = self._get_func()
-        v = func(z)[0]
+        v = func(z)
         v = np.concatenate([1-v[0],v[0]], axis=1)
         v = np.argmax(v, axis=1)
         return accuracy_score(y, v) 
