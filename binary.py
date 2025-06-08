@@ -1,4 +1,4 @@
-class binary_regression:
+class binary_regression():
     def __init__(self, mode="logit", tol=1e-4):
         """
         :param mode: "logit" or "probit"
