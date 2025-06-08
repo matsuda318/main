@@ -114,12 +114,20 @@ class binary_regression:
         self.APE = np.mean(u[1]) * param
         u = func(np.dot(np.mean(z, axis=0), param))
         self.PEA = u[1] * param
-        v = func(np.dot(z, param.reshape(-1, 1)))
-        v = np.concatenate([1-v[0],v[0]], axis=1)
-        v = np.argmax(v, axis=1)
-        self.score = accuracy_score(y, v)
         return self
 
+    def score(self, x, y):
+        if x.shape[1] != self.k:
+            raise ValueError
+
+        z = self._get_z_y(x)
+        z = z @ self.coef
+        func = self._get_func()
+        v = func(z)[0]
+        v = np.concatenate([1-v[0],v[0]], axis=1)
+        v = np.argmax(v, axis=1)
+        return accuracy_score(y, v) 
+        
     def predict(self, x):
         """
         引数xとfitで推定したパラメータをもとに 1である予測確率を返す
