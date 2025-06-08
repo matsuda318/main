@@ -1,3 +1,9 @@
+from scipy.stats import norm
+from sklearn.metrics import accuracy_score
+from scipy.stats import t
+import numpy as np 
+import pandas as pd
+
 class binary_regression():
     def __init__(self, mode="logit", tol=1e-4):
         """
