@@ -23,7 +23,7 @@ def bhood(func, param, y, x):
     w = np.dot(x.T, y * h * x) + np.dot(x.T, (1 - y) * h2 * x)
     return [u2, v2, w]
 
-class binary_regression:
+class BinaryLogit:
     def __init__(self, mode="logit", tol=1e-4):
         """
         :param mode: "logit" or "probit"
