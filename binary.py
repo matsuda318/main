@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
+from sklearn.metrics import accuracy_score
 
 def probit(x):
     return [norm.cdf(x), norm.pdf(x), -x * norm.pdf(x)]
@@ -113,6 +114,10 @@ class binary_regression:
         self.APE = np.mean(u[1]) * param
         u = func(np.dot(np.mean(z, axis=0), param))
         self.PEA = u[1] * param
+        v = func(np.dot(z, param.reshape(-1, 1)))
+        v = np.concatenate([1-v[0],v[0]], axis=1)
+        v = np.argmax(v, axis=1)
+        self.score = accuracy_score(y, v)
         return self
 
     def predict(self, x):
