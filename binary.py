@@ -3,26 +3,6 @@ import pandas as pd
 from scipy.stats import norm
 from sklearn.metrics import accuracy_score
 
-def probit(x):
-    return [norm.cdf(x), norm.pdf(x), -x * norm.pdf(x)]
-def logit(x):
-    y = 1 / (1 + np.exp(-x))
-    y2 = np.exp(-x) / (1 + np.exp(-x)) ** 2
-    y3 = (np.exp(-2 * x) - np.exp(-x)) / (1 + np.exp(-x)) ** 3
-    return [y, y2, y3]
-def bhood(func, param, y, x):
-    param = param.reshape(-1, 1)
-    z = np.dot(x, param)
-    g = func(z)
-    u = y * np.log(g[0]) + (1 - y) * np.log(1 - g[0])
-    u2 = np.sum(u, axis=0)
-    v = (y * (g[1] / g[0])) * x - ((1 - y) * g[1] / (1 - g[0])) * x
-    v2 = np.sum(v, axis=0)
-    h = (g[0] * g[2] - g[1] ** 2) / g[0] ** 2
-    h2 = (-(1 - g[0]) * g[2] - g[1] ** 2) / (1 - g[0]) ** 2
-    w = np.dot(x.T, y * h * x) + np.dot(x.T, (1 - y) * h2 * x)
-    return [u2, v2, w]
-    
 class binary_regression:
     def __init__(self, mode="logit", tol=1e-4):
         """
@@ -140,3 +120,23 @@ class binary_regression:
                               index=self.x_names,
                               columns=col_names)
         return output
+        
+def probit(x):
+    return [norm.cdf(x), norm.pdf(x), -x * norm.pdf(x)]
+def logit(x):
+    y = 1 / (1 + np.exp(-x))
+    y2 = np.exp(-x) / (1 + np.exp(-x)) ** 2
+    y3 = (np.exp(-2 * x) - np.exp(-x)) / (1 + np.exp(-x)) ** 3
+    return [y, y2, y3]
+def bhood(func, param, y, x):
+    param = param.reshape(-1, 1)
+    z = np.dot(x, param)
+    g = func(z)
+    u = y * np.log(g[0]) + (1 - y) * np.log(1 - g[0])
+    u2 = np.sum(u, axis=0)
+    v = (y * (g[1] / g[0])) * x - ((1 - y) * g[1] / (1 - g[0])) * x
+    v2 = np.sum(v, axis=0)
+    h = (g[0] * g[2] - g[1] ** 2) / g[0] ** 2
+    h2 = (-(1 - g[0]) * g[2] - g[1] ** 2) / (1 - g[0]) ** 2
+    w = np.dot(x.T, y * h * x) + np.dot(x.T, (1 - y) * h2 * x)
+    return [u2, v2, w]
